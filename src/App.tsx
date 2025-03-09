@@ -5,7 +5,7 @@ import './App.css';
 function App() {
   return (
     <div className="app-container">
-      <h1>命名助手</h1>
+      <h1>指标命名助手</h1>
       <InputBox />
       <ResultList />
     </div>
