@@ -52,3 +52,20 @@ export default tseslint.config({
   },
 })
 ```
+
+# TransFluent - 指标命名助手
+
+## 构建扩展
+
+1. 构建项目：
+   ```
+   npm run build
+   ```
+
+2. 手动复制必要文件到 dist 目录：
+   ```
+   cp manifest.json dist/
+   cp public/vite.svg dist/
+   ```
+
+3. 现在可以加载 dist 目录作为 Chrome 扩展

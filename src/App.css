@@ -121,6 +121,8 @@ h1 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
+  width: 100%;
+  min-height: 100px;
 }
 
 .result-item {
@@ -133,6 +135,10 @@ h1 {
   justify-content: space-between;
   transition: var(--transition);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 320px;
+  min-width: 320px;
 }
 
 .result-item:hover {
@@ -144,6 +150,7 @@ h1 {
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  max-width: calc(100% - 40px);
 }
 
 .result-text {
@@ -193,6 +200,9 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  flex-shrink: 0;
 }
 
 .copy-button:hover {
@@ -251,22 +261,249 @@ h1 {
   height: 16px;
 }
 
+.tabs-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
 .tabs {
   display: flex;
-  margin-bottom: 12px;
+  flex: 1;
+  justify-content: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  min-height: 36px;
+}
+
+.tab-nav-button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.tab-nav-button:hover:not(:disabled) {
+  color: var(--primary-color);
+}
+
+.tab-nav-button:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 .tab {
-  padding: 8px 12px;
+  padding: 8px 0;
   font-size: 13px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: var(--transition);
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  min-width: 60px;
+  max-width: 80px;
 }
 
 .tab.active {
   border-bottom-color: var(--primary-color);
   color: var(--primary-color);
   font-weight: 500;
+}
+
+/* 历史记录相关样式 */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.history-toggle-button {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.history-toggle-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--primary-color);
+}
+
+.history-toggle-button.active {
+  color: var(--primary-color);
+  background-color: rgba(0, 113, 227, 0.1);
+}
+
+.history-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.history-header h3 {
+  font-size: 16px;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.clear-history-button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.clear-history-button:hover {
+  color: #FF3B30;
+  background-color: rgba(255, 59, 48, 0.1);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.history-item:hover {
+  background-color: #eaeaea;
+}
+
+.history-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.history-query {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+  text-align: left;
+  word-break: break-all;
+}
+
+.history-time {
+  font-size: 12px;
+  color: var(--secondary-color);
+}
+
+.remove-history-button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.remove-history-button:hover {
+  color: #FF3B30;
+  background-color: rgba(255, 59, 48, 0.1);
+}
+
+.empty-history {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  color: var(--secondary-color);
+  font-size: 14px;
+}
+
+/* 历史记录搜索相关样式 */
+.history-search {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.history-search-input {
+  width: 100%;
+  padding: 8px 30px 8px 10px;
+  font-size: 13px;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: var(--transition);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.history-search-input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.clear-search-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.clear-search-button:hover {
+  color: #FF3B30;
+  background-color: rgba(255, 59, 48, 0.1);
+}
+
+.empty-search-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  color: var(--secondary-color);
+  font-size: 13px;
+  font-style: italic;
 }

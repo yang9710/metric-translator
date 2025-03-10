@@ -5,7 +5,17 @@ import { TranslationResult } from '../utils/translator';
 export const ResultList = () => {
   const { results, loading, error } = useNameStore();
   const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('camelCase');
+  const [activeTab, setActiveTab] = useState<string>('snakeCase');
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  // 定义标签顺序
+  const tabOrder = ['snakeCase', 'kebabCase', 'camelCase', 'pascalCase', 'constantCase'];
+
+  // 每页显示的标签数量
+  const tabsPerPage = 3;
+
+  // 计算总页数
+  const totalPages = Math.ceil(tabOrder.length / tabsPerPage);
 
   const copyToClipboard = (text: string, resultId: string) => {
     navigator.clipboard.writeText(text);
@@ -15,6 +25,16 @@ export const ResultList = () => {
     setTimeout(() => {
       setCopiedIndex(null);
     }, 2000);
+  };
+
+  // 切换到下一页
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  // 切换到上一页
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
   if (loading) {
@@ -43,21 +63,50 @@ export const ResultList = () => {
     return null;
   }
 
-  // 获取所有可用的样式标签
-  const availableStyles = Object.keys(results).filter(style => style !== 'error');
+  // 获取当前页的标签
+  const currentTabs = tabOrder
+    .filter(style => results[style] && results[style].length > 0)
+    .slice(currentPage * tabsPerPage, (currentPage + 1) * tabsPerPage);
+
+  // 如果当前活动标签不在当前页，则设置为当前页的第一个标签
+  if (currentTabs.length > 0 && !currentTabs.includes(activeTab)) {
+    setActiveTab(currentTabs[0]);
+  }
 
   return (
     <div className="results-section">
-      <div className="tabs">
-        {availableStyles.map(style => (
-          <div
-            key={style}
-            className={`tab ${activeTab === style ? 'active' : ''}`}
-            onClick={() => setActiveTab(style)}
-          >
-            {getStyleShortName(style)}
-          </div>
-        ))}
+      <div className="tabs-container">
+        <button
+          className="tab-nav-button"
+          onClick={prevPage}
+          disabled={totalPages <= 1}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
+        <div className="tabs">
+          {currentTabs.map(style => (
+            <div
+              key={style}
+              className={`tab ${activeTab === style ? 'active' : ''}`}
+              onClick={() => setActiveTab(style)}
+            >
+              {getStyleShortName(style)}
+            </div>
+          ))}
+        </div>
+
+        <button
+          className="tab-nav-button"
+          onClick={nextPage}
+          disabled={totalPages <= 1}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
       {results[activeTab] && (
@@ -98,18 +147,6 @@ export const ResultList = () => {
     </div>
   );
 };
-
-// 辅助函数：获取样式的显示名称
-function getStyleDisplayName(style: string): string {
-  switch (style) {
-    case 'camelCase': return '驼峰命名 (camelCase)';
-    case 'snakeCase': return '蛇形命名 (snake_case)';
-    case 'constantCase': return '常量命名 (CONSTANT_CASE)';
-    case 'pascalCase': return '帕斯卡命名 (PascalCase)';
-    case 'kebabCase': return '短横线命名 (kebab-case)';
-    default: return style;
-  }
-}
 
 // 辅助函数：获取样式的简短名称（用于标签页）
 function getStyleShortName(style: string): string {
